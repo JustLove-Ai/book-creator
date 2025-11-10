@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  description String?   // The main idea/concept of the book
+  coverImage  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  chapters    Chapter[]
+}
+
+model Chapter {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  bookId     String    @db.ObjectId
+  book       Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  title      String
+  order      Int       // Position in the book
+  layoutType String    @default("chapter") // chapter, cover, regular, image
+  content    String?   // For pages that don't use sections
+  imageUrl   String?   // For image pages
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  sections   Section[]
+
+  @@index([bookId, order])
+}
+
+model Section {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  chapterId  String   @db.ObjectId
+  chapter    Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  mainPoint  String   // The main point/topic to be covered
+  content    String?  // AI-generated and user-edited content
+  order      Int      // Position within the chapter
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([chapterId, order])
+}
