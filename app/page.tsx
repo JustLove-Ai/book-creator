@@ -13,11 +13,17 @@ export default function Home() {
         <p className="text-xl text-muted-foreground max-w-md">
           AI-powered book writing application. Focus on writing, let AI help you expand your ideas.
         </p>
-        <div className="pt-6">
+        <div className="pt-6 flex gap-4 justify-center">
+          <Link href="/demo">
+            <Button size="lg" variant="outline">Try Demo</Button>
+          </Link>
           <Link href="/books">
             <Button size="lg">Get Started</Button>
           </Link>
         </div>
+        <p className="text-sm text-muted-foreground mt-4">
+          Try the demo to explore the editor without setup, or get started with your own books
+        </p>
       </div>
     </main>
   );
